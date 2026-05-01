@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Forward plan
+
+Architectural direction for upcoming work lives at [`docs/stack-plan.md`](docs/stack-plan.md). When making non-trivial changes (new panes, ingestion pipeline, schema changes, hosting choices), check whether the plan already covers the area and prefer its choices unless there's a concrete reason to deviate. The plan is forward-looking — most of it is not implemented yet.
+
 ## Commands
 
 - `npm run dev` — Vite dev server (frontend only; the `/api/*` routes are not served here, they only run when deployed to Vercel or via `vercel dev`).
@@ -32,6 +36,6 @@ This is a single-page "World Data Surface" dashboard (`NOW`) deployed on Vercel.
 
 ### Environment & deployment
 
-- `vercel.json` currently inlines all env vars (Supabase URL/keys, Google client config, restore endpoint) directly under `env`. Treat this file with care — service role key and other secrets live there.
+- `vercel.json` is gitignored — it lives only on local disks (and inlines secrets for `vercel dev`). Production env vars are managed in the Vercel project dashboard, not in this file. Do not add `vercel.json` back to git.
 - Two parallel naming schemes coexist: server functions read `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY`; the browser client reads `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`. Keep both in sync when changing Supabase config.
 - `vite.config.ts` optionally loads `./.vite-source-tags.js` (gitignored, may be absent locally) — the `try/catch` around the dynamic import is intentional, do not remove it.
